@@ -1,6 +1,6 @@
 # ColorQR - 3x Data Density QR Codes
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style## 🔬 The Technology Behind 3x Densityfor-the-badge)](https://developerkry.github.io/ColorQR/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://developerkry.github.io/ColorQR/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?style=for-the-badge&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 

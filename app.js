@@ -120,12 +120,11 @@ class CMYQRApp {
             
             // Detect if URL
             const isUrl = text.startsWith('http://') || text.startsWith('https://') || text.startsWith('www.');
-            const urlIcon = isUrl ? '🔗 ' : '📝 ';
             
             const content = `
                 <div class="result-title">✅ QR Code Generated Successfully!</div>
                 <div class="result-content">
-                    <p><strong>Content:</strong> ${urlIcon}${this.escapeHtml(text.substring(0, 100))}${text.length > 100 ? '...' : ''}</p>
+                    <p><strong>Content:</strong> ${this.escapeHtml(text.substring(0, 100))}${text.length > 100 ? '...' : ''}</p>
                     
                     <div class="qr-info">
                         <div class="qr-stat">
@@ -195,14 +194,13 @@ class CMYQRApp {
             
             if (result.success) {
                 const isUrl = result.text.startsWith('http://') || result.text.startsWith('https://') || result.text.startsWith('www.');
-                const urlIcon = isUrl ? '🔗 ' : '📝 ';
                 const linkHtml = isUrl ? `<br><a href="${result.text}" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none;">→ Open Link</a>` : '';
                 
                 const content = `
                     <div class="result-title">✅ QR Code Read Successfully!</div>
                     <div class="result-content">
                         <div style="background: var(--bg-primary); padding: 1rem; border-radius: 6px; border: 1px solid var(--border); margin: 1rem 0; word-break: break-all;">
-                            ${urlIcon}<strong>${this.escapeHtml(result.text)}</strong>
+                            <strong>${this.escapeHtml(result.text)}</strong>
                             ${linkHtml}
                         </div>
                         
@@ -327,13 +325,12 @@ class CMYQRApp {
             
             if (successfulDecode) {
                 const isUrl = successfulDecode.startsWith('http://') || successfulDecode.startsWith('https://') || successfulDecode.startsWith('www.');
-                const urlIcon = isUrl ? '🔗 ' : '📝 ';
                 const linkHtml = isUrl ? `<br><a href="${successfulDecode}" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none;">→ Open Link</a>` : '';
                 
                 content += `
                     <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-primary); border-radius: 6px; border: 1px solid var(--border); word-break: break-all;">
                         <strong>Decoded Content:</strong><br>
-                        ${urlIcon}${this.escapeHtml(successfulDecode)}
+                        ${this.escapeHtml(successfulDecode)}
                         ${linkHtml}
                     </div>
                 `;
