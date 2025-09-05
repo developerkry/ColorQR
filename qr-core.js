@@ -231,6 +231,12 @@ class CMYQRCore {
         const pm = payload.slice(chunk, 2 * chunk);
         const py = payload.slice(2 * chunk);
         
+        // Store original payload and chunk size for reconstruction
+        const metadata = {
+            originalLength: payload.length,
+            chunkSize: chunk
+        };
+        
         // Generate matrices
         const mcResult = this.makeModuleMatrix(pc, targetSize);
         const mmResult = this.makeModuleMatrix(pm, targetSize);
@@ -448,14 +454,19 @@ class CMYQRCore {
     decodeQR(imageData, threshold = 128) {
         try {
             const { pc, pm, py, detectedScale, detectedSize } = this.extractCMYChannels(imageData, threshold, true);
+            
+            // Simple concatenation - this should work for the original splitting method
             const decoded = pc + pm + py;
+            
+            // Clean up any trailing null characters
+            const cleaned = decoded.replace(/\0+$/, '');
             
             return {
                 success: true,
-                text: decoded,
+                text: cleaned,
                 detectedScale,
                 detectedSize,
-                bytesDecoded: new TextEncoder().encode(decoded).length
+                bytesDecoded: new TextEncoder().encode(cleaned).length
             };
         } catch (error) {
             return {
