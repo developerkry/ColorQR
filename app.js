@@ -200,9 +200,15 @@ class CMYQRApp {
                 const isUrl = result.text.startsWith('http://') || result.text.startsWith('https://') || result.text.startsWith('www.');
                 const linkHtml = isUrl ? `<br><a href="${result.text}" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none;">→ Open Link</a>` : '';
                 
+                // Show extraction status
+                const extractionStatus = result.wasExtracted ? 
+                    '<p style="color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem;">🔍 QR code automatically detected and extracted from image</p>' : 
+                    '';
+                
                 const content = `
                     <div class="result-title">✅ QR Code Read Successfully!</div>
                     <div class="result-content">
+                        ${extractionStatus}
                         <div style="background: var(--bg-primary); padding: 1rem; border-radius: 6px; border: 1px solid var(--border); margin: 1rem 0; word-break: break-all;">
                             <strong>${this.escapeHtml(result.text)}</strong>
                             ${linkHtml}
