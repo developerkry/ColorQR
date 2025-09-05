@@ -30,8 +30,8 @@ Thank you for your interest in contributing to ColorQR! We welcome contributions
 
 ```bash
 # Fork and clone
-git clone https://github.com/developerkry/colorqr.git
-cd colorqr
+git clone https://github.com/developerkry/ColorQR.git
+cd ColorQR
 
 # Create feature branch
 git checkout -b feature/your-feature-name
