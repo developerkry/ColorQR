@@ -8,7 +8,7 @@
 
 Instead of traditional 1-bit-per-pixel QR codes, ColorQR uses **3 bits per pixel** by encoding data across three color channels, achieving unprecedented data density while maintaining reliable scanning.
 
-![ColorQR Screenshot](https://via.placeholder.com/800x400/0a0a0a/3b82f6?text=ColorQR+Screenshot)
+![ColorQR Screenshot](https://i.imgur.com/1XuiFjV.png)
 
 ## 🚀 The Data Density Revolution
 
