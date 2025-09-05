@@ -10,7 +10,7 @@ class CMYQRCore {
 
     // Calculate optimal QR size for given payload
     calculateQRSize(payloadLength) {
-        const overhead = 7; // length(1) + end_marker(2) + crc(4)
+        const overhead = 8; // length(2) + end_marker(2) + crc(4)
         const targetRecoveryRatio = 0.3; // 30% recovery data
         
         for (const size of this.standardSizes) {
@@ -138,7 +138,7 @@ class CMYQRCore {
             const reserved = this.createReservedMask(size);
             const availableModules = size * size - reserved.flat().filter(x => x).length;
             availableBytes = Math.floor(availableModules / 8);
-            recoveryBytes = Math.max(0, availableBytes - payloadBytes.length - 7);
+            recoveryBytes = Math.max(0, availableBytes - payloadBytes.length - 8);
         } else {
             const sizeInfo = this.calculateQRSize(payloadBytes.length);
             size = sizeInfo.size;
@@ -148,8 +148,8 @@ class CMYQRCore {
         
         const reserved = this.createReservedMask(size);
         
-        // Truncate payload if too long
-        const maxPayload = availableBytes - 7;
+        // Increase maxPayload calculation for 2-byte length
+        const maxPayload = availableBytes - 8; // 2-byte length + end marker + crc
         let finalPayload = payloadBytes;
         if (payloadBytes.length > maxPayload) {
             finalPayload = payloadBytes.slice(0, maxPayload);
@@ -175,8 +175,9 @@ class CMYQRCore {
         const dataPacket = new Uint8Array(availableBytes);
         let pos = 0;
         
-        // Length
-        dataPacket[pos++] = finalPayload.length;
+        // Length (2 bytes, big-endian)
+        dataPacket[pos++] = (finalPayload.length >>> 8) & 0xFF;
+        dataPacket[pos++] = finalPayload.length & 0xFF;
         
         // Payload
         for (let i = 0; i < finalPayload.length; i++) {
@@ -410,22 +411,23 @@ class CMYQRCore {
 
     // Parse data structure with error correction
     parseDataStructure(rawData) {
-        if (rawData.length < 8) {
+        if (rawData.length < 9) { // Now need minimum 9 bytes: length(2) + end_marker(2) + crc(4) + 1 data byte
             // Remove padding
             return new TextDecoder().decode(rawData.filter(b => b !== 0));
         }
         
-        const payloadLength = rawData[0];
+        // Read 2-byte length (big-endian)
+        const payloadLength = (rawData[0] << 8) | rawData[1];
         if (payloadLength === 0) return "";
         
-        const payloadEnd = 1 + payloadLength;
+        const payloadEnd = 2 + payloadLength;
         if (payloadEnd + 6 > rawData.length) {
             // Fallback to simple extraction
-            const result = rawData.slice(1).filter(b => b !== 0);
+            const result = rawData.slice(2).filter(b => b !== 0);
             return new TextDecoder('utf-8', { fatal: false }).decode(result);
         }
         
-        const payload = rawData.slice(1, payloadEnd);
+        const payload = rawData.slice(2, payloadEnd);
         
         // Look for end marker (0xDEAD)
         const markerPos = payloadEnd;
